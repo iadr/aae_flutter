@@ -7,7 +7,7 @@ import 'transition_route_observer.dart';
 
 // SharedPreferences prefs;
 
-void main() async {
+void main(){
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
       systemNavigationBarColor:
