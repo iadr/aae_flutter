@@ -29,6 +29,9 @@ dependencies:
   shared_preferences: ^0.5.6
   http: any
   flutter_login: ^1.0.14
+  weekly_timetable: 
+    path: ./dependencies/flutter_Weekly_TimeTable
+  table_calendar: ^2.2.3
 
 dev_dependencies:
   flutter_test:

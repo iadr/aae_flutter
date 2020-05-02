@@ -1,6 +1,7 @@
 import 'package:aae/models/user.dart';
 import 'package:aae/views/dashboard.dart';
 import 'package:aae/views/tutor/subjects_screen.dart';
+import 'package:aae/views/tutor/workable_hours.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -66,8 +67,7 @@ myDrawer(BuildContext context) {
             leading: Icon(FontAwesomeIcons.calendarAlt),
             title: Text('Mi Horario'),
             onTap: () {
-              // Update the state of the app.
-              // ...
+              Navigator.push(context,MaterialPageRoute(builder: (context) => TutorHoursScreen()));
             },
           ),
           ListTile(

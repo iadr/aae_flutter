@@ -117,6 +117,7 @@ class _AddSubjectsScreenState extends State<AddSubjectsScreen> {
       print(response.body);
     }
     setState(() {});
+    return null;
   }
 
   _addSubject(BuildContext context, int subjectId) async {

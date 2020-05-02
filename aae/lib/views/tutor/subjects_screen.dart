@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:aae/models/subject.dart';
 import 'package:aae/providers/login_state.dart';
+import 'package:aae/providers/server_requests.dart';
 import 'package:aae/utils/drawer.dart';
 import 'package:aae/utils/server_info.dart';
 import 'package:aae/views/tutor/add_subjects.dart';
@@ -24,7 +25,7 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
   @override
   void initState() {
     super.initState();
-    getMySubjects(context);
+    Requests.getMySubjects(context);
   }
 
   @override
@@ -49,27 +50,9 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
     );
   }
 
-  Future<SubjectsList> getMySubjects(BuildContext context) async {
-    final session = Provider.of<LoginState>(context, listen: false);
-    // print(session.token);
-    // var response = await http.get(ServerInfo.host + '/api/aae/tutors/subjects/new',
-    var response = await http.get(ServerInfo.host + '/api/aae/tutors/subjects',
-        // var response = await http.get(ServerInfo.host + '/api/aae/subjects',
-        headers: {HttpHeaders.authorizationHeader: session.token});
-    var jsonResponse;
-    if (response.statusCode == 200) {
-      jsonResponse = jsonDecode(response.body);
-      // print('subsect: ${response.body}');
-      return SubjectsList.fromJson(jsonResponse);
-    } else {
-      print(response.body);
-    }
-    setState(() {});
-  }
-
   _subjectList() {
     return FutureBuilder(
-        future: getMySubjects(context),
+        future: Requests.getMySubjects(context),
         builder: (context, AsyncSnapshot<SubjectsList> ss) {
           if (ss.hasData) {
             // return ListView.builder(
@@ -105,7 +88,7 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
                           color: Colors.red,
                         ),
                         onPressed: () {
-                          _deleteSubject(context, subject.id);
+                          this.deleteSubject(context, subject.id);
                         }),
                     title: Text(subject.name),
                     subtitle: Text(subject.level),
@@ -134,7 +117,7 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
         });
   }
 
-  _deleteSubject(BuildContext context, int id) async {
+  deleteSubject(BuildContext context, int id) async {
     final session = Provider.of<LoginState>(context, listen: false);
     // print(session.token);
     String subjectInfo = jsonEncode({'subject_id': id});
