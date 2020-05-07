@@ -176,7 +176,7 @@ class _LoginPageState extends State<LoginPage>
                 highlightColor: Colors.transparent,
                 onPressed: _onSignInButtonPress,
                 child: Text(
-                  "Existing",
+                  "Ingresar",
                   style: TextStyle(
                       color: left,
                       fontSize: 16.0,
@@ -191,7 +191,7 @@ class _LoginPageState extends State<LoginPage>
                 highlightColor: Colors.transparent,
                 onPressed: _onSignUpButtonPress,
                 child: Text(
-                  "New",
+                  "Registrarse",
                   style: TextStyle(
                       color: right,
                       fontSize: 16.0,
@@ -244,7 +244,7 @@ class _LoginPageState extends State<LoginPage>
                               color: Colors.black,
                               size: 22.0,
                             ),
-                            hintText: "Email Address",
+                            hintText: "Email",
                             hintStyle: TextStyle(
                                 fontFamily: "WorkSansSemiBold", fontSize: 17.0),
                           ),
@@ -273,7 +273,7 @@ class _LoginPageState extends State<LoginPage>
                               size: 22.0,
                               color: Colors.black,
                             ),
-                            hintText: "Password",
+                            hintText: "Contraseña",
                             hintStyle: TextStyle(
                                 fontFamily: "WorkSansSemiBold", fontSize: 17.0),
                             suffixIcon: GestureDetector(
@@ -320,19 +320,22 @@ class _LoginPageState extends State<LoginPage>
                       tileMode: TileMode.clamp),
                 ),
                 child: Consumer<LoginState>(
-                  builder: (BuildContext context, LoginState value, Widget child) {
+                  builder:
+                      (BuildContext context, LoginState value, Widget child) {
                     if (value.isLoading()) {
                       return MaterialButton(
                           highlightColor: Colors.transparent,
                           splashColor: Theme.Colors.loginGradientEnd,
                           //shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5.0))),
                           child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 10.0, horizontal: 42.0),
-                              child: CircularProgressIndicator(
-                                backgroundColor: Theme.Colors.loginGradientStart,
-                                valueColor: new AlwaysStoppedAnimation<Color>(Theme.Colors.loginGradientEnd),
-                              )),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10.0, horizontal: 42.0),
+                            child: CircularProgressIndicator(
+                              backgroundColor: Theme.Colors.loginGradientStart,
+                              valueColor: new AlwaysStoppedAnimation<Color>(
+                                  Theme.Colors.loginGradientEnd),
+                            ),
+                          ),
                           onPressed: () {}
                           // showInSnackBar("Login button pressed")
                           );
@@ -356,7 +359,8 @@ class _LoginPageState extends State<LoginPage>
                         ),
                       ),
                       onPressed: () {
-                        session.login("tutor@tutor.com", "tutor1234",context);
+                        session.login("tutor@tutor.com", "tutor1234", context);
+                        // session.login("alumno@tutor.com", "alumno1234", context);
                         // session.login(loginEmailController.text, loginPasswordController.text,context);
                       }
                       // showInSnackBar("Login button pressed")
@@ -370,7 +374,7 @@ class _LoginPageState extends State<LoginPage>
             child: FlatButton(
                 onPressed: () {},
                 child: Text(
-                  "Forgot Password?",
+                  "¿Olvidaste tu contraseña?",
                   style: TextStyle(
                       decoration: TextDecoration.underline,
                       color: Colors.white,
@@ -422,7 +426,7 @@ class _LoginPageState extends State<LoginPage>
                               FontAwesomeIcons.user,
                               color: Colors.black,
                             ),
-                            hintText: "Name",
+                            hintText: "Nombre",
                             hintStyle: TextStyle(
                                 fontFamily: "WorkSansSemiBold", fontSize: 16.0),
                           ),
@@ -450,7 +454,7 @@ class _LoginPageState extends State<LoginPage>
                               FontAwesomeIcons.envelope,
                               color: Colors.black,
                             ),
-                            hintText: "Email Address",
+                            hintText: "Email",
                             hintStyle: TextStyle(
                                 fontFamily: "WorkSansSemiBold", fontSize: 16.0),
                           ),
@@ -478,7 +482,7 @@ class _LoginPageState extends State<LoginPage>
                               FontAwesomeIcons.lock,
                               color: Colors.black,
                             ),
-                            hintText: "Password",
+                            hintText: "Contraseña",
                             hintStyle: TextStyle(
                                 fontFamily: "WorkSansSemiBold", fontSize: 16.0),
                             suffixIcon: GestureDetector(
@@ -515,7 +519,7 @@ class _LoginPageState extends State<LoginPage>
                               FontAwesomeIcons.lock,
                               color: Colors.black,
                             ),
-                            hintText: "Confirmation",
+                            hintText: "Confirmar contraseña",
                             hintStyle: TextStyle(
                                 fontFamily: "WorkSansSemiBold", fontSize: 16.0),
                             suffixIcon: GestureDetector(
@@ -569,14 +573,26 @@ class _LoginPageState extends State<LoginPage>
                       padding: const EdgeInsets.symmetric(
                           vertical: 10.0, horizontal: 42.0),
                       child: Text(
-                        "SIGN UP",
+                        "Registrarse",
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 25.0,
                             fontFamily: "WorkSansBold"),
                       ),
                     ),
-                    onPressed: () => showInSnackBar("SignUp button pressed")),
+                    onPressed: () {
+                      // showInSnackBar("SignUp button pressed");
+                      if (signupPasswordController.text !=
+                          signupConfirmPasswordController.text) {
+                        showInSnackBar("Las contraseñas no concuerdan... intenta otra vez por favor");
+                      } else {
+                        session.register(
+                            signupNameController.text,
+                            signupEmailController.text,
+                            signupPasswordController.text,
+                            context);
+                      }
+                    }),
               ),
             ],
           ),

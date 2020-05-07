@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:aae/models/appointment.dart';
 import 'package:aae/models/subject.dart';
 import 'package:aae/providers/login_state.dart';
 import 'package:aae/utils/server_info.dart';
@@ -54,4 +55,26 @@ class Requests {
       
     }
   }
+
+  static Future<AppointmentsList> getMyAppointments(BuildContext context) async {
+    final session = Provider.of<LoginState>(context, listen: false);
+    // print(session.token);
+    // var response = await http.get(ServerInfo.host + '/api/aae/tutors/subjects/new',
+    var response = await http.get(ServerInfo.host + '/api/aae/tutors/appointments',
+        // var response = await http.get(ServerInfo.host + '/api/aae/subjects',
+        headers: {HttpHeaders.authorizationHeader: session.token});
+    var jsonResponse;
+    if (response.statusCode == 200) {
+      jsonResponse = jsonDecode(response.body);
+      // print('appointments: ${response.body}');
+      return AppointmentsList.fromJson(jsonResponse);
+    } else {
+      print(response.body);
+    }
+    // setState(() {});
+    return null;
+  }
 }
+
+
+

@@ -1,5 +1,6 @@
 import 'package:aae/models/user.dart';
 import 'package:aae/views/dashboard.dart';
+import 'package:aae/views/tutor/appointments_screen.dart';
 import 'package:aae/views/tutor/subjects_screen.dart';
 import 'package:aae/views/tutor/workable_hours.dart';
 import 'package:flutter/material.dart';
@@ -57,10 +58,9 @@ myDrawer(BuildContext context) {
         ..addAll([
           ListTile(
             leading: Icon(FontAwesomeIcons.bookReader),
-            title: Text('Mis Tutorías'),
+            title: Text('Mis Próximas Clases'),
             onTap: () {
-              // Update the state of the app.
-              // ...
+              Navigator.push(context,MaterialPageRoute(builder: (context) => AppointmentsScreen()));
             },
           ),
           ListTile(

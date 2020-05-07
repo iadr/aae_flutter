@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "299660054534",
+    "firebase_url": "https://apuntaalexito-74c06.firebaseio.com",
+    "project_id": "apuntaalexito-74c06",
+    "storage_bucket": "apuntaalexito-74c06.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:299660054534:android:540defabef8de043497387",
+        "android_client_info": {
+          "package_name": "com.example.aae"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "299660054534-c7dfkar715sf0264o8nrd7naqi8s2clo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBx9X4zSNEVi5vmF99NKVgvon3cfKrwx0I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "299660054534-c7dfkar715sf0264o8nrd7naqi8s2clo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

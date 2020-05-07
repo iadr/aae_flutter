@@ -32,6 +32,9 @@ dependencies:
   weekly_timetable: 
     path: ./dependencies/flutter_Weekly_TimeTable
   table_calendar: ^2.2.3
+  timeago: ^2.0.26
+  jiffy: ^3.0.1
+
 
 dev_dependencies:
   flutter_test:

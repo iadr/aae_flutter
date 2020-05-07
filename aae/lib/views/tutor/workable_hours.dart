@@ -96,8 +96,8 @@ Future<Map<String, dynamic>> fetchHours(BuildContext context) async {
   var jsonResponse;
   if (response.statusCode == 200) {
     jsonResponse = jsonDecode(response.body);
-    print('response: ${response.body}');
-    Map<String, dynamic> aux = jsonResponse["data"];
+    // print('response: ${response.body}');
+    // Map<String, dynamic> aux = jsonResponse["data"];
     // print((aux.keys.contains("hours")));
     return jsonResponse["data"];
   } else {
@@ -115,11 +115,13 @@ updateHours(BuildContext context) async {
         HttpHeaders.authorizationHeader: session.token,
         HttpHeaders.contentTypeHeader: "application/json"
       },
-      body: jsonEncode({"hours": jsonEncode({"hours":hours})}));
+      body: jsonEncode({
+        "hours": jsonEncode({"hours": hours})
+      }));
   if (response.statusCode == 200) {
     // jsonResponse = jsonDecode(response.body);
-    print('statusCode 200: ${response.body}');
-    // return null;
+    // print('statusCode 200: ${response.body}');
+    return null;
   } else {
     print(response.body);
   }
@@ -135,8 +137,8 @@ hoursTable(Map<int, List<int>> initialSchedule) {
       padding: EdgeInsets.only(bottom: 0),
       child: WeeklyTimeTable(
         initialSchedule: initialSchedule,
-        //  cellColor: Color.fromRGBO(0, 184, 255, 1.0),
-        cellSelectedColor: Color.fromRGBO(189, 0, 255, 0.3),
+        cellColor: Colors.grey[100],
+        cellSelectedColor: Color.fromRGBO(255, 137, 0, 0.8),
         boarderColor: Color.fromRGBO(0, 30, 255, 1.0),
         locale: 'es',
         onValueChanged: (Map<int, List<int>> selected) {
@@ -145,12 +147,12 @@ hoursTable(Map<int, List<int>> initialSchedule) {
           for (int i = 0; i < selected.length; i++) {
             for (int j = 0; j < selected[i].length; j++) {
               hours.add({
-                "day": i + 2,
+                "day": (i + 2),
                 "hour": WeeklyTimes.times["es"][selected[i][j]]
               });
             }
           }
-          print(hours);
+          // print(hours);
           // print(jsonEncode({"hours": hours}));
         },
       ),
