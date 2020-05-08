@@ -3,6 +3,7 @@ import 'package:aae/models/user.dart';
 import 'package:aae/providers/login_state.dart';
 import 'package:aae/views/dashboard.dart';
 import 'package:aae/views/login.dart';
+import 'package:aae/views/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -19,19 +20,19 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'aae',
         // theme: ThemeData.dark(),
-        // home: LoginPage(),
-        initialRoute: '/',
-        routes: {
-          '/': (BuildContext context) {
-            var state = Provider.of<LoginState>(context);
-            if (state.isLoggedIn()) {
-              return DashboardScreen();
-            } else {
-              return LoginPage();
-              // return LoginScreen();
-            }
-          },
-        },
+        home: ProfileScreen(),
+        // initialRoute: '/',
+        // routes: {
+        //   '/': (BuildContext context) {
+        //     var state = Provider.of<LoginState>(context);
+        //     if (state.isLoggedIn()) {
+        //       return DashboardScreen();
+        //     } else {
+        //       return LoginPage();
+        //       // return LoginScreen();
+        //     }
+        //   },
+        // },
       ),
     );
   }
