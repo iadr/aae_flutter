@@ -3,7 +3,8 @@ import 'package:aae/models/user.dart';
 import 'package:aae/providers/login_state.dart';
 import 'package:aae/views/dashboard.dart';
 import 'package:aae/views/login.dart';
-import 'package:aae/views/profile.dart';
+import 'package:aae/views/profile_screen.dart';
+import 'package:aae/views/student/appointments_form.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,7 +21,8 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'aae',
         // theme: ThemeData.dark(),
-        home: ProfileScreen(),
+        // home: ProfileScreen(),
+        home: AppointmentForm(),
         // initialRoute: '/',
         // routes: {
         //   '/': (BuildContext context) {
