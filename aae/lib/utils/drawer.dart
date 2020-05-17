@@ -1,5 +1,6 @@
 import 'package:aae/models/user.dart';
 import 'package:aae/views/dashboard.dart';
+import 'package:aae/views/student/appointments_form.dart';
 import 'package:aae/views/tutor/appointments_screen.dart';
 import 'package:aae/views/tutor/subjects_screen.dart';
 import 'package:aae/views/tutor/workable_hours.dart';
@@ -22,7 +23,6 @@ myDrawer(BuildContext context) {
           ),
         ),
         decoration: BoxDecoration(
-
           color: Colors.blue,
         ),
       ),
@@ -42,14 +42,21 @@ myDrawer(BuildContext context) {
           ListTile(
             leading: Icon(FontAwesomeIcons.calendarPlus),
             title: Text('Agendar Tutoría'),
-            onTap: () {},
+            onTap: () {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AppointmentForm()));
+            },
           ),
           ListTile(
             leading: Icon(FontAwesomeIcons.bookReader),
             title: Text('Mis Tutorías'),
             onTap: () {
-              // Update the state of the app.
-              // ...
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AppointmentsScreen()));
             },
           )
         ]);
@@ -60,14 +67,18 @@ myDrawer(BuildContext context) {
             leading: Icon(FontAwesomeIcons.bookReader),
             title: Text('Mis Próximas Clases'),
             onTap: () {
-              Navigator.push(context,MaterialPageRoute(builder: (context) => AppointmentsScreen()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AppointmentsScreen()));
             },
           ),
           ListTile(
             leading: Icon(FontAwesomeIcons.calendarAlt),
             title: Text('Mi Horario'),
             onTap: () {
-              Navigator.push(context,MaterialPageRoute(builder: (context) => TutorHoursScreen()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => TutorHoursScreen()));
             },
           ),
           ListTile(

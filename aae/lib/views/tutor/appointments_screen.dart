@@ -1,8 +1,11 @@
 import 'package:aae/models/appointment.dart';
+import 'package:aae/models/user.dart';
 import 'package:aae/providers/server_requests.dart';
+import 'package:aae/utils/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:provider/provider.dart';
 
 class AppointmentsScreen extends StatefulWidget {
   const AppointmentsScreen({Key key}) : super(key: key);
@@ -18,13 +21,15 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
       appBar: AppBar(
         title: Text('Próximas clases'),
       ),
+      drawer: myDrawer(context),
       body: _appointmentList(),
     );
   }
 
   _appointmentList() {
+    final userData= Provider.of<User>(context);
     return FutureBuilder(
-        future: Requests.getMyAppointments(context),
+        future: (userData.isTutor())?Requests.getTutorAppointments(context):null,
         builder: (context, AsyncSnapshot<AppointmentsList> ss) {
           if (ss.hasData) {
             // return ListView.builder(

@@ -22,19 +22,19 @@ class MyApp extends StatelessWidget {
         title: 'aae',
         // theme: ThemeData.dark(),
         // home: ProfileScreen(),
-        home: AppointmentForm(),
-        // initialRoute: '/',
-        // routes: {
-        //   '/': (BuildContext context) {
-        //     var state = Provider.of<LoginState>(context);
-        //     if (state.isLoggedIn()) {
-        //       return DashboardScreen();
-        //     } else {
-        //       return LoginPage();
-        //       // return LoginScreen();
-        //     }
-        //   },
-        // },
+        // home: AppointmentForm(),
+        initialRoute: '/',
+        routes: {
+          '/': (BuildContext context) {
+            var state = Provider.of<LoginState>(context);
+            if (state.isLoggedIn()) {
+              return DashboardScreen();
+            } else {
+              return LoginPage();
+              // return LoginScreen();
+            }
+          },
+        },
       ),
     );
   }

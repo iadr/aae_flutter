@@ -358,9 +358,9 @@ class _LoginPageState extends State<LoginPage>
                               fontFamily: "WorkSansBold"),
                         ),
                       ),
-                      onPressed: () {
-                        session.login("tutor@tutor.com", "tutor1234", context);
-                        // session.login("alumno@tutor.com", "alumno1234", context);
+                      onPressed: () { //TODO: CORREGIR ANTES DE SUBIR LA VERSION FINAL
+                        // session.login("tutor@tutor.com", "tutor1234", context);
+                        session.login("alumno@tutor.com", "alumno1234", context);
                         // session.login(loginEmailController.text, loginPasswordController.text,context);
                       }
                       // showInSnackBar("Login button pressed")
