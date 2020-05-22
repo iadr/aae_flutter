@@ -27,9 +27,11 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
   }
 
   _appointmentList() {
-    final userData= Provider.of<User>(context);
+    final userData = Provider.of<User>(context);
     return FutureBuilder(
-        future: (userData.isTutor())?Requests.getTutorAppointments(context):null,
+        future: (userData.isTutor())
+            ? Requests.getTutorAppointments(context)
+            : Requests.getStudentAppointments(context),
         builder: (context, AsyncSnapshot<AppointmentsList> ss) {
           if (ss.hasData) {
             // return ListView.builder(
@@ -52,11 +54,12 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                 itemCount: ss.data.appointment.length,
                 itemBuilder: (context, index) {
                   Appointment appointment = ss.data.appointment[index];
-                  final DateTime date =DateTime.parse(appointment.date + " " + appointment.hour);
-                      // DateTime.now().subtract(Duration(minutes: 15));
-                      // DateTime.parse("2020-05-08 18:00:00");
-                      // print(Jiffy("2020-05-07 17:00","yyyy-MM-dd hh:mm").fromNow());
-                      Jiffy.locale('es');
+                  final DateTime date =
+                      DateTime.parse(appointment.date + " " + appointment.hour);
+                  // DateTime.now().subtract(Duration(minutes: 15));
+                  // DateTime.parse("2020-05-08 18:00:00");
+                  // print(Jiffy("2020-05-07 17:00","yyyy-MM-dd hh:mm").fromNow());
+                  Jiffy.locale('es');
 
                   return Card(
                     child: ListTile(
@@ -73,7 +76,8 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                           onPressed: () {}),
                       // title: Text(appointment.date +" "+appointment.hour.substring(0,5)),
                       subtitle: Text(date.toString()),
-                      title: Text(Jiffy(date.toString(),"yyyy-MM-dd hh:mm").fromNow()),
+                      title: Text(
+                          Jiffy(date.toString(), "yyyy-MM-dd hh:mm").fromNow()),
                       // subtitle: Text(appointment.name),
                     ),
                   );

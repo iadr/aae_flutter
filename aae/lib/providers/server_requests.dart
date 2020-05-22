@@ -119,7 +119,7 @@ class Requests {
     return null;
   }
 
-  static Future<Map<String,dynamic>> getTutorList(
+  static Future<Map<String, dynamic>> getTutorList(
       BuildContext context, int type, int subject, String date) async {
     final session = Provider.of<LoginState>(context, listen: false);
     // print(session.token);
@@ -134,14 +134,47 @@ class Requests {
       jsonResponse = jsonDecode(response.body);
       // print('appointments: ${response.body}');
       DateList dList = DateList.fromJson(jsonResponse);
-      TutorList tList = TutorList.fromJson(
-          jsonResponse); //TODO: modificar clase userlist, y crear clase tutor
+      TutorList tList = TutorList.fromJson(jsonResponse);
       return {'dates': dList.dates, 'tutors': tList.tutors};
     } else {
       print(response.body);
     }
     // setState(() {});
     return null;
+  }
+
+  static Future<bool> newAppointment(
+      BuildContext context, List dates, int tutorId, int subjectId) async {
+    final session = Provider.of<LoginState>(context, listen: false);
+    // print(session.token);
+    String appointmentInfo = jsonEncode({
+      'dates': jsonEncode(dates),
+      'tutor_id': tutorId,
+      'subject_id': subjectId
+    });
+    var response = await http.post(
+        ServerInfo.host + '/api/aae/appointments/new',
+        // var response = await http.get(ServerInfo.host + '/api/aae/tutors/subjects',
+        // var response = await http.get(ServerInfo.host + '/api/aae/subjects',
+        headers: {
+          HttpHeaders.authorizationHeader: session.token,
+          HttpHeaders.contentTypeHeader: "application/json"
+        },
+        body: appointmentInfo);
+    print(response.body);
+    if (response.statusCode != 200) {
+      // jsonResponse = jsonDecode(response.body);
+      // print(response.body);
+
+      return false;
+    } else {
+      print(response.body);
+      var json = jsonDecode(response.body);
+      if(json['code']==500){
+        return false;
+      }
+      return true;
+    }
   }
 
   static Future<User> getUserProfile(BuildContext context) async {

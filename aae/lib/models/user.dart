@@ -114,7 +114,7 @@ class User with ChangeNotifier {
     _address = json['address'];
     _studyIn = json['studyIn'];
     _password = json['password'];
-    // _roles = json['roles']!=null?json['roles'].cast<String>():null;
+    _roles = json['roles'].cast<String>();
   }
 
   Map<String, dynamic> toJson() {
@@ -125,7 +125,7 @@ class User with ChangeNotifier {
     data['address'] = this._address;
     data['studyIn'] = this._studyIn;
     data['password'] = this._password;
-    // data['roles'] = this._roles;
+    data['roles'] = this._roles;
     return data;
   }
 }

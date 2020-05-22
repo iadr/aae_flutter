@@ -61,9 +61,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       _events=groupData();
     });
 
-    _events={
-      _selectedDay:[]
-    };
+    // _events={
+    //   _selectedDay:[]
+    // };
     // _events = {
     //   myDate: ['AEvent A7', 'AEvent B7', 'AEvent C7', 'AEvent D7'],
     //   myDate: [

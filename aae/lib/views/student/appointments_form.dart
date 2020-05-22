@@ -3,6 +3,7 @@ import 'package:aae/models/subject.dart';
 import 'package:aae/models/user.dart';
 import 'package:aae/providers/server_requests.dart';
 import 'package:aae/utils/drawer.dart';
+import 'package:aae/views/student/apointment_tutor_list.dart';
 import 'package:card_settings/card_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -17,6 +18,8 @@ class AppointmentForm extends StatefulWidget {
 }
 
 class _AppointmentFormState extends State<AppointmentForm> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   bool isFlash = true;
   bool isElementary = true;
   List<String> options = ['Clase Única', 'Clase con Seguimiento (4 clases)'];
@@ -31,13 +34,61 @@ class _AppointmentFormState extends State<AppointmentForm> {
   int _subject;
   DateTime _dateTime = DateTime.now();
 
+  List _date;
+  int _tutorId;
+
   bool _search = false;
+  int selected;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text('Agendar nueva Clase'),
+        actions: <Widget>[
+          (selected != null)
+              ? IconButton(
+                  icon: Icon(
+                    FontAwesomeIcons.solidSave,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    selected = null;
+                    print('$_date, $_tutorId, $_subject');
+                    Requests.newAppointment(context, _date, _tutorId, _subject)
+                        .then((value) {
+                      if (value) {
+                        _scaffoldKey.currentState.removeCurrentSnackBar();
+                        _scaffoldKey.currentState.showSnackBar(SnackBar(
+                          content: Text(
+                            'ClASES REGISTRADAS CORRECTAMENTE',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          duration: Duration(seconds: 2),
+                          backgroundColor: Colors.greenAccent[700],
+                        ));
+                      } else {
+                        _scaffoldKey.currentState.removeCurrentSnackBar();
+                        _scaffoldKey.currentState.showSnackBar(SnackBar(
+                          content: Text(
+                            'OCURRIÓ UN PROBLEMA ...',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          duration: Duration(seconds: 2),
+                          backgroundColor: Colors.deepOrangeAccent[700],
+                        ));
+                      }
+                    });
+                    setState(() {});
+                  })
+              : IconButton(
+                  icon: Icon(
+                    FontAwesomeIcons.save,
+                    color: Colors.white10,
+                  ),
+                  onPressed: null),
+        ],
       ),
       drawer: myDrawer(context),
       body: _buildAppointmentForm(),
@@ -72,7 +123,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
               item: {'names': _names, 'ids': _ids}
             });
           }
-          print(sList);
+          // print(sList);
 
           // if (levels[0]=='básica') {
           //   isElementary=true;
@@ -122,50 +173,90 @@ class _AppointmentFormState extends State<AppointmentForm> {
             if (snapshot.hasData) {
               List<Tutor> tutors = snapshot.data['tutors'];
               List<Date> dates = snapshot.data['dates'];
-              print(snapshot.data);
+              // print(snapshot.data);
               if (_appointmentType == 0) {
+                //FLASH
+                print('dates.length: ${dates.length}');
                 return ListView.builder(
                     itemCount: dates.length,
                     itemBuilder: (context, index) {
                       Tutor tutor = tutors
                           .firstWhere((e) => e.id == dates[index].tutorId);
                       return Card(
-                        elevation: 10,
-                        borderOnForeground: true,
-                        shadowColor: Colors.blueGrey[300],
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                          side: BorderSide(
+                            width: 1.8,
+                            color: Colors.grey[400],
+                          ),
+                        ),
+                        color: (index == selected)
+                            ? Colors.grey[300]
+                            : Colors.white,
                         child: ListTile(
-                          // leading: CircleAvatar(child: Icon(FontAwesomeIcons.bookOpen)),
+                          leading: CircleAvatar(
+                              foregroundColor: Colors.blue,
+                              backgroundColor: Colors.transparent,
+                              child: Icon(
+                                FontAwesomeIcons.clock,
+                                size: 36,
+                              )),
                           title: Text(
                               dates[index].dbDate + ' ' + dates[index].hour),
                           subtitle: Text(tutor.name),
+                          onTap: () {
+                            selected = index;
+                            _showDialog(dates[index]);
+                            setState(() {});
+                          },
                         ),
                       );
                     });
               } else {
+                //SEGUIMIENTO
                 return ListView.builder(
                     itemCount: tutors.length,
                     itemBuilder: (context, index) {
                       return Card(
-                        elevation: 10,
-                        borderOnForeground: true,
-                        shadowColor: Colors.blueAccent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                          side: BorderSide(
+                            width: 1.8,
+                            color: Colors.grey[400],
+                          ),
+                        ),
                         child: ListTile(
-                          leading: CircleAvatar(
-                              foregroundColor: Colors.orangeAccent,
-                              backgroundColor: Colors.transparent,
-                              child: Icon(
+                          leading: IconButton(
+                              color: Colors.orange[700],
+                              padding: EdgeInsets.all(0),
+                              // visualDensity: VisualDensity(horizontal: 0,vertical: 0),
+                              icon: Icon(
                                 FontAwesomeIcons.userCircle,
                                 size: 36,
-                              )),
+                              ),
+                              onPressed: () {}),
                           title: Text(tutors[index].name),
                           subtitle: Text(tutors[index].studyIn),
-                          trailing: Wrap(
-                            children: <Widget>[
-                              IconButton(
-                                  tooltip: 'ver horas disponibles',
-                                  icon: Icon(FontAwesomeIcons.chevronRight),
-                                  onPressed: null),
-                            ],
+                          trailing: IconButton(
+                            onPressed: () {
+                              List<Date> tutorDates = dates
+                                  .where((element) =>
+                                      element.tutorId == tutors[index].id)
+                                  .toList();
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      AppointmentTutorHoursScreen(
+                                    dates: tutorDates,
+                                    tutorId: tutors[index].id,
+                                    subjectId: _subject,
+                                  ),
+                                ),
+                              );
+                            },
+                            color: Colors.orange[700],
+                            icon: Icon(FontAwesomeIcons.chevronRight),
                           ),
                         ),
                       );
@@ -205,48 +296,26 @@ class _AppointmentFormState extends State<AppointmentForm> {
           initialValue: levels[0],
           onChanged: (value) {
             _level = value;
-            print(_level);
+            // print(_level);
             value == 'básica' ? isElementary = true : isElementary = false;
             setState(() {
-              subjectNames.clear();
-              subjectIds.clear();
-              _levels[_level]
-                  .forEach((element) => subjectNames.add(element.name));
-              print(subjectNames);
-              _levels[_level]
-                  .forEach((element) => subjectIds.add(element.id.toString()));
+              if (_search) _search = false;
+              // subjectNames.clear();
+              // subjectIds.clear();
+              // _levels[_level]
+              //     .forEach((element) => subjectNames.add(element.name));
+              // // print(subjectNames);
+              // _levels[_level]
+              //     .forEach((element) => subjectIds.add(element.id.toString()));
               // print(subjectIds);
             });
-            print(subjectNames);
+            // print(subjectNames);
           },
           requiredIndicator: Text(
             ' *',
             style: TextStyle(color: Colors.redAccent),
           ),
         ),
-        // CardSettingsListPicker(
-        //   visible: isElementary,
-        //   label: 'Materia',
-        //   options: subjectNames,
-        //   autovalidate: true,
-        //   values: subjectIds,
-        //   validator: (value) {
-        //     if (value == null || value.isEmpty) {
-        //       return "por favor selecciona una materia";
-        //     }
-        //     return null;
-        //   },
-        //   onChanged: (value) {
-        //     print(subjectNames);
-        //     print(subjectIds);
-        //     // print(value);
-        //     _subject = int.parse(value);
-        //   },
-        //   requiredIndicator: Text(
-        //     ' *',
-        //     style: TextStyle(color: Colors.redAccent),
-        //   ),
-        // ),
         CardSettingsListPicker(
           // visible: !isElementary,
           label: 'Materia',
@@ -262,7 +331,10 @@ class _AppointmentFormState extends State<AppointmentForm> {
           },
           onChanged: (value) {
             print(value);
+            if (_search) _search = false;
+
             _subject = int.parse(value);
+            setState(() {});
           },
           requiredIndicator: Text(
             ' *',
@@ -279,13 +351,15 @@ class _AppointmentFormState extends State<AppointmentForm> {
           values: ['0', '1'],
           initialValue: '0',
           onChanged: (value) {
-            print(value);
+            // print(value);
             if (value == '1') {
               isFlash = false;
             } else {
               isFlash = true;
             }
             _appointmentType = int.parse(value);
+            if (_search) _search = false;
+
             setState(() {});
           },
           contentAlign: TextAlign.left,
@@ -305,6 +379,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
           firstDate: DateTime.now(),
           lastDate: DateTime.now().add(Duration(days: 45)),
           onChanged: (value) {
+            if (_search) _search = false;
             setState(() {
               _dateTime = value;
             });
@@ -317,13 +392,79 @@ class _AppointmentFormState extends State<AppointmentForm> {
           textColor: Colors.white,
           backgroundColor: Colors.lightBlue[700],
           onPressed: () {
-            print('app:$_appointmentType\nsubject: $_subject \n');
-            print(DateFormat('yyyy-MM-dd').format(_dateTime));
+            // print('app:$_appointmentType\nsubject: $_subject \n');
+            // print(DateFormat('yyyy-MM-dd').format(_dateTime));
             _search = true;
+            selected=null;
             setState(() {});
           },
         ),
       ],
     );
+  }
+
+  void _showDialog(Date date) {
+    _date = [
+      {'date': date.dbDate, 'hour': date.hour}
+    ];
+    _tutorId = date.tutorId;
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Confirmar clase por favor'),
+            content: Text('Estas seguro de que quieres esta clase?'),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  'CERRAR',
+                  style: TextStyle(
+                    color: Colors.deepOrange[700],
+                  ),
+                ),
+              ),
+              FlatButton(
+                onPressed: () {
+                  // Navigator.of(context).pop();
+                  setState(() {});
+                  Requests.newAppointment(context, _date, _tutorId, _subject)
+                      .then((value) {
+                    if (value) {
+                      //true
+                      _scaffoldKey.currentState.removeCurrentSnackBar();
+                      _scaffoldKey.currentState.showSnackBar(SnackBar(
+                        content: Text(
+                          'ClASES REGISTRADAS CORRECTAMENTE',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        duration: Duration(seconds: 2),
+                        backgroundColor: Colors.greenAccent[700],
+                      ));
+                    } else {
+                      //false
+                      _scaffoldKey.currentState.removeCurrentSnackBar();
+                      _scaffoldKey.currentState.showSnackBar(SnackBar(
+                        content: Text(
+                          'OCURRIÓ UN PROBLEMA ...',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        duration: Duration(seconds: 2),
+                        backgroundColor: Colors.deepOrangeAccent[700],
+                      ));
+                    }
+                    Navigator.pop(context);
+                  });
+                },
+                child: Text(
+                  'CONFIRMAR',
+                  style: TextStyle(color: Colors.blue[700]),
+                ),
+              ),
+            ],
+          );
+        });
   }
 }
