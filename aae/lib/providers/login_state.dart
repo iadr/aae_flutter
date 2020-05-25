@@ -82,11 +82,15 @@ class LoginState with ChangeNotifier {
       user.name = jsonResponse['name'];
       user.id = jsonResponse['id'];
       user.roles = jsonResponse['roles'].cast<String>();
-      print('name: ${user.name}');
-      print('name: ${jsonResponse["name"]}');
-      print('roles: ${user.roles}');
-      print('is tutor?: ${user.isTutor()}');
-      print('is student?: ${user.isStudent()}');
+      user.studyIn = jsonResponse['studyIn'];
+      user.address = jsonResponse['address'];
+      user.major = jsonResponse['major'];
+      user.description = jsonResponse['description'];
+      // print('name: ${user.name}');
+      // print('name: ${jsonResponse["name"]}');
+      // print('roles: ${user.roles}');
+      // print('is tutor?: ${user.isTutor()}');
+      // print('is student?: ${user.isStudent()}');
 
       return true;
     } else {

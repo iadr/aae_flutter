@@ -1,6 +1,9 @@
+import 'package:aae/models/user.dart';
+import 'package:aae/utils/drawer.dart';
 import 'package:card_settings/card_settings.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+// import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   ProfileScreen({Key key}) : super(key: key);
@@ -10,206 +13,222 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  bool isStudent = false;
+  bool isStudent;
   String name;
   String address;
   String studyIn;
   String major;
   String email;
   String password;
-  String description = "http://www.codyleet.com/spheria";
-  // String description;
+  String description;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
+    final userInfo = Provider.of<User>(context);
+
+    isStudent = userInfo.isStudent();
+    name = userInfo.name;
+    address = userInfo.address;
+    studyIn = userInfo.studyIn;
+    major = userInfo.major;
+    description = userInfo.description;
+    email = userInfo.email;
+    password = userInfo.password;
+
     return Scaffold(
       appBar: AppBar(),
-      body: Form(
-          key: _formKey,
-          child: CardSettings(
-            shrinkWrap: true,
-            padding: 15.0,
-            cardElevation: 50.0,
-            children: [
-              CardSettingsHeader(
-                label: "My Profile",
-              ),
-              CardSettingsText(
-                label: "Name",
-                initialValue: "My Name",
-                keyboardType: TextInputType.text,
-                maxLength: 40,
-                autovalidate: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'What\'s your name?';
-                  }
-                  name = value;
-                  return null;
-                },
-                requiredIndicator: Text(
-                  ' *',
-                  style: TextStyle(color: Colors.redAccent),
-                ),
-              ),
-              CardSettingsText(
-                label: "Study In",
-                maxLength: 40,
-                maxLengthEnforced: true,
-                // initialValue: "My Name",
-                keyboardType: TextInputType.text,
-                autovalidate: true,
-                validator: (value) {
-                  if (!isStudent && (value == null || value.isEmpty)) {
-                    return 'What\'s your study house?';
-                  }
-                  studyIn = value;
-                  return null;
-                },
-                requiredIndicator: (!isStudent)
-                    ? Text(
-                        ' *',
-                        style: TextStyle(color: Colors.redAccent),
-                      )
-                    : Text(""),
-              ),
-              CardSettingsText(
-                visible: !isStudent,
-                label: 'Major',
-                maxLength: 60,
-                autovalidate: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'What\'s your major?';
-                  }
-                  major = value;
-                  return null;
-                },
-                requiredIndicator: Text(
-                  ' *',
-                  style: TextStyle(color: Colors.redAccent),
-                ),
-              ),
-              CardSettingsText(
-                label: "Address",
-                initialValue: "My Address",
-                keyboardType: TextInputType.text,
-                autovalidate: true,
-                validator: (value) {
-                  // if (value == null || value.isEmpty) {
-                  //   return 'What\'s your name?';
-                  // }
-                  address = value;
-                  return null;
-                },
-                // requiredIndicator: Text(
-                //   ' *',
-                //   style: TextStyle(color: Colors.redAccent),
-                // ),
-              ),
-              CardSettingsParagraph(
-                label: "About Yourself",
-                maxLength: 250,
-                maxLengthEnforced: true,
-                initialValue: (description == null || description.isEmpty)
-                    ? ""
-                    : description,
-                hintText: "holas",
-                keyboardType: TextInputType.text,
-                autovalidate: true,
-                validator: (value) {
-                  // if (value == null || value.isEmpty) {
+      drawer: myDrawer(context),
+      body: profileForm(),
+    );
+  }
 
-                  //     return 'What\'s your name?';
-                  //   }
-                  description = value;
-                  return null;
-                },
-                // requiredIndicator: Text(
-                //   ' *',
-                //   style: TextStyle(color: Colors.redAccent),
-                // ),
+  Form profileForm() {
+    return Form(
+        key: _formKey,
+        child: CardSettings(
+          shrinkWrap: true,
+          padding: 15.0,
+          cardElevation: 50.0,
+          children: [
+            CardSettingsHeader(
+              label: "Información Personal",
+            ),
+            CardSettingsText(
+              label: "Nombre",
+              initialValue: name,
+              keyboardType: TextInputType.text,
+              maxLength: 40,
+              autovalidate: true,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return '¿Cuál es tu nombre?';
+                }
+                name = value;
+                return null;
+              },
+              requiredIndicator: Text(
+                ' *',
+                style: TextStyle(color: Colors.redAccent),
               ),
-              CardSettingsHeader(
-                label: "Security",
+            ),
+            CardSettingsText(
+              label: "Estudias en:",
+              maxLength: 40,
+              maxLengthEnforced: true,
+              initialValue: studyIn,
+              keyboardType: TextInputType.text,
+              autovalidate: true,
+              validator: (value) {
+                if (!isStudent && (value == null || value.isEmpty)) {
+                  return '¿dónde estudias?';
+                }
+                studyIn = value;
+                return null;
+              },
+              requiredIndicator: (!isStudent)
+                  ? Text(
+                      ' *',
+                      style: TextStyle(color: Colors.redAccent),
+                    )
+                  : Text(""),
+            ),
+            CardSettingsText(
+              visible: !isStudent,
+              label: 'Carrera',
+              maxLength: 60,
+              autovalidate: true,
+              initialValue: major,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return '¿Cuál es tu carrera?';
+                }
+                major = value;
+                return null;
+              },
+              requiredIndicator: Text(
+                ' *',
+                style: TextStyle(color: Colors.redAccent),
               ),
-              CardSettingsEmail(
-                icon: Icon(FontAwesomeIcons.envelope),
-                initialValue: "My Email",
-                autovalidate: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'What\'s your email?';
-                  }
-                  email = value;
-                  return null;
-                },
-                requiredIndicator: Text(
-                  ' *',
-                  style: TextStyle(color: Colors.redAccent),
-                ),
+            ),
+            CardSettingsText(
+              label: "Dirección",
+              initialValue: address,
+              keyboardType: TextInputType.text,
+              autovalidate: true,
+              validator: (value) {
+                // if (value == null || value.isEmpty) {
+                //   return 'What\'s your name?';
+                // }
+                address = value;
+                return null;
+              },
+              // requiredIndicator: Text(
+              //   ' *',
+              //   style: TextStyle(color: Colors.redAccent),
+              // ),
+            ),
+            CardSettingsParagraph(
+              label: "Describete a ti mismo",
+              maxLength: 250,
+              maxLengthEnforced: true,
+              initialValue: description,
+              hintText:
+                  "Una breve descripción para que los demás sepan un poco más de ti",
+              keyboardType: TextInputType.text,
+              autovalidate: true,
+              validator: (value) {
+                // if (value == null || value.isEmpty) {
+
+                //     return 'What\'s your name?';
+                //   }
+                description = value;
+                return null;
+              },
+            ),
+            CardSettingsHeader(
+              label: "Seguridad",
+            ),
+            CardSettingsEmail(
+              // icon: Icon(FontAwesomeIcons.envelope),
+              initialValue: email,
+              autovalidate: true,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'necesitamos que nos digas tu e-mail';
+                }
+                email = value;
+                return null;
+              },
+              requiredIndicator: Text(
+                ' *',
+                style: TextStyle(color: Colors.redAccent),
               ),
-              CardSettingsPassword(
-                icon: Icon(FontAwesomeIcons.lock),
-                initialValue: "My Password",
-                autovalidate: true,
-                validator: (value) {
-                  if (value.isEmpty || value == null) {
-                    return 'What\'s your email?';
-                  }
-                  password = value;
-                  return null;
-                },
-                requiredIndicator: Text(
-                  ' *',
-                  style: TextStyle(color: Colors.redAccent),
-                ),
+            ),
+            CardSettingsPassword(
+              label: 'Contraseña',
+              // icon: Icon(FontAwesomeIcons.lock),
+              initialValue: password,
+              autovalidate: true,
+              validator: (value) {
+                if (value.isEmpty || value == null) {
+                  return 'No puedes dejar la contraseña en blanco';
+                } else if (value.length < 6)
+                  return 'La contraseña debe tener como mínimo 6 caracteres';
+                password = value;
+                return null;
+              },
+              requiredIndicator: Text(
+                ' *',
+                style: TextStyle(color: Colors.redAccent),
               ),
-              CardSettingsHeader(
-                label: "Actions",
-              ),
-              CardSettingsButton(
-                onPressed: () {
-                  print("save");
-                  if (name != null &&
-                      name.trim().isNotEmpty &&
-                      email != null &&
-                      email.trim().isNotEmpty &&
-                      password != null &&
-                      password.trim().isNotEmpty) {
-                    if (!isStudent) {
-                      if (studyIn != null &&
-                          studyIn.trim().isNotEmpty &&
-                          major != null &&
-                          major.trim().isNotEmpty) {
-                        print("you pass");
-                      } else {
-                        print('you lose, study or major isn\'t defined');
-                      }
+            ),
+            CardSettingsHeader(
+              // label: "Actions",
+            ),
+            CardSettingsButton(
+              onPressed: () {
+                print("save");
+                if (name != null &&
+                    name.trim().isNotEmpty &&
+                    email != null &&
+                    email.trim().isNotEmpty &&
+                    password != null &&
+                    password.trim().isNotEmpty) {
+                  if (!isStudent) {
+                    if (studyIn != null &&
+                        studyIn.trim().isNotEmpty &&
+                        major != null &&
+                        major.trim().isNotEmpty) {
+                      print("you pass");
                     } else {
-                      print('you pass');
+                      print('you lose, study or major isn\'t defined');
                     }
                   } else {
-                    print('you lose, name,email or password is empty');
+                    print('you pass');
                   }
-                },
-                label: "SAVE",
-                backgroundColor: Colors.lightBlue[700],
-                textColor: Colors.white,
-                bottomSpacing: 2,
-              ),
-              CardSettingsButton(
-                onPressed: () {
-                  print("now you should pop this screen");
-                },
-                label: "CANCEL",
-                backgroundColor: Colors.deepOrangeAccent[700],
-                textColor: Colors.white,
-              ),
-            ],
-          )),
-    );
+                } else {
+                  print('you lose, name,email or password is empty');
+                }
+              },
+              label: "ACTUALIZAR PERFIL",
+              backgroundColor: Colors.lightBlue[700],
+              textColor: Colors.white,
+              bottomSpacing: 2,
+            ),
+            CardSettingsButton(
+              onPressed: () {
+                // print("now you should pop this screen");
+                Navigator.pop(context);
+              },
+              label: "CANCELAR",
+              backgroundColor: Colors.deepOrangeAccent[700],
+              textColor: Colors.white,
+              bottomSpacing: 3,
+
+            ),
+          ],
+        ));
   }
 }

@@ -53,6 +53,8 @@ class User with ChangeNotifier {
 
   String _address;
   String _studyIn;
+  String _major;
+  String _description;
   String _password;
 
   User();
@@ -96,6 +98,16 @@ class User with ChangeNotifier {
   String get studyIn => _studyIn;
   set studyIn(String studyIn) {
     _studyIn = studyIn;
+    notifyListeners();
+  }
+  String get major => _major;
+  set major(String major) {
+    _major = major;
+    notifyListeners();
+  }
+  String get description => _description;
+  set description(String description) {
+    _description = description;
     notifyListeners();
   }
 
