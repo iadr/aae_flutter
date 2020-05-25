@@ -290,115 +290,121 @@ class _AppointmentFormState extends State<AppointmentForm> {
       shrinkWrap: true,
       showMaterialonIOS: true,
       children: [
-        CardSettingsListPicker(
-          label: 'Tu nivel',
-          options: levels,
-          initialValue: levels[0],
-          onChanged: (value) {
-            // _level = value;
-            // print(_level);
-            value == 'básica' ? isElementary = true : isElementary = false;
-            setState(() {
-              if (_search) _search = false;
-              // subjectNames.clear();
-              // subjectIds.clear();
-              // _levels[_level]
-              //     .forEach((element) => subjectNames.add(element.name));
-              // // print(subjectNames);
-              // _levels[_level]
-              //     .forEach((element) => subjectIds.add(element.id.toString()));
-              // print(subjectIds);
-            });
-            // print(subjectNames);
-          },
-          requiredIndicator: Text(
-            ' *',
-            style: TextStyle(color: Colors.redAccent),
-          ),
-        ),
-        CardSettingsListPicker(
-          // visible: !isElementary,
-          label: 'Materia',
-          options:
-              isElementary ? sList['básica']['names'] : sList['media']['names'],
-          autovalidate: true,
-          values: isElementary ? sList['básica']['ids'] : sList['media']['ids'],
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return "por favor selecciona una materia";
-            }
-            return null;
-          },
-          onChanged: (value) {
-            print(value);
-            if (_search) _search = false;
+        CardSettingsSection(
+          children: <Widget>[
+            CardSettingsListPicker(
+              label: 'Tu nivel',
+              options: levels,
+              initialValue: levels[0],
+              onChanged: (value) {
+                // _level = value;
+                // print(_level);
+                value == 'básica' ? isElementary = true : isElementary = false;
+                setState(() {
+                  if (_search) _search = false;
+                  // subjectNames.clear();
+                  // subjectIds.clear();
+                  // _levels[_level]
+                  //     .forEach((element) => subjectNames.add(element.name));
+                  // // print(subjectNames);
+                  // _levels[_level]
+                  //     .forEach((element) => subjectIds.add(element.id.toString()));
+                  // print(subjectIds);
+                });
+                // print(subjectNames);
+              },
+              requiredIndicator: Text(
+                ' *',
+                style: TextStyle(color: Colors.redAccent),
+              ),
+            ),
+            CardSettingsListPicker(
+              // visible: !isElementary,
+              label: 'Materia',
+              options: isElementary
+                  ? sList['básica']['names']
+                  : sList['media']['names'],
+              autovalidate: true,
+              values:
+                  isElementary ? sList['básica']['ids'] : sList['media']['ids'],
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "por favor selecciona una materia";
+                }
+                return null;
+              },
+              onChanged: (value) {
+                print(value);
+                if (_search) _search = false;
 
-            _subject = int.parse(value);
-            setState(() {});
-          },
-          requiredIndicator: Text(
-            ' *',
-            style: TextStyle(color: Colors.redAccent),
-          ),
-        ),
-        CardSettingsListPicker(
-          label: 'Tipo de Clase',
-          autovalidate: true,
-          onSaved: (value) {
-            _appointmentType = int.parse(value);
-          },
-          options: options,
-          values: ['0', '1'],
-          initialValue: '0',
-          onChanged: (value) {
-            // print(value);
-            if (value == '1') {
-              isFlash = false;
-            } else {
-              isFlash = true;
-            }
-            _appointmentType = int.parse(value);
-            if (_search) _search = false;
+                _subject = int.parse(value);
+                setState(() {});
+              },
+              requiredIndicator: Text(
+                ' *',
+                style: TextStyle(color: Colors.redAccent),
+              ),
+            ),
+            CardSettingsListPicker(
+              label: 'Tipo de Clase',
+              autovalidate: true,
+              onSaved: (value) {
+                _appointmentType = int.parse(value);
+              },
+              options: options,
+              values: ['0', '1'],
+              initialValue: '0',
+              onChanged: (value) {
+                // print(value);
+                if (value == '1') {
+                  isFlash = false;
+                } else {
+                  isFlash = true;
+                }
+                _appointmentType = int.parse(value);
+                if (_search) _search = false;
 
-            setState(() {});
-          },
-          contentAlign: TextAlign.left,
-          requiredIndicator: Text(
-            ' *',
-            style: TextStyle(color: Colors.redAccent),
-          ),
-        ),
-        CardSettingsDatePicker(
-          label: 'Fecha',
-          // justDate: true,
-          requiredIndicator: Text(
-            ' *',
-            style: TextStyle(color: Colors.redAccent),
-          ),
-          initialValue: DateTime.now(),
-          firstDate: DateTime.now(),
-          lastDate: DateTime.now().add(Duration(days: 45)),
-          onChanged: (value) {
-            if (_search) _search = false;
-            setState(() {
-              _dateTime = value;
-            });
-          },
-        ),
-        CardSettingsButton(
-          // visible: isFlash,
-          bottomSpacing: 4,
-          label: 'BUSCAR',
-          textColor: Colors.white,
-          backgroundColor: Colors.lightBlue[700],
-          onPressed: () {
-            // print('app:$_appointmentType\nsubject: $_subject \n');
-            // print(DateFormat('yyyy-MM-dd').format(_dateTime));
-            _search = true;
-            selected=null;
-            setState(() {});
-          },
-        ),
+                setState(() {});
+              },
+              contentAlign: TextAlign.left,
+              requiredIndicator: Text(
+                ' *',
+                style: TextStyle(color: Colors.redAccent),
+              ),
+            ),
+            CardSettingsDatePicker(
+              label: 'Fecha',
+              // justDate: true,
+              requiredIndicator: Text(
+                ' *',
+                style: TextStyle(color: Colors.redAccent),
+              ),
+              initialValue: DateTime.now(),
+              firstDate: DateTime.now(),
+              lastDate: DateTime.now().add(Duration(days: 45)),
+              onChanged: (value) {
+                if (_search) _search = false;
+                setState(() {
+                  _dateTime = value;
+                });
+              },
+            ),
+            CardSettingsButton(
+              // visible: isFlash,
+              bottomSpacing: 4,
+              label: 'BUSCAR',
+              textColor: Colors.white,
+              backgroundColor: Colors.lightBlue[700],
+              onPressed: () {
+                // print('app:$_appointmentType\nsubject: $_subject \n');
+                // print(DateFormat('yyyy-MM-dd').format(_dateTime));
+                _search = true;
+                selected = null;
+                setState(() {});
+              },
+            ),
+          ],
+        )
       ],
     );
   }

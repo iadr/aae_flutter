@@ -42,36 +42,42 @@ class _TutorHoursScreenState extends State<TutorHoursScreen> {
           CardSettings(
             cardElevation: 1,
             shrinkWrap: true,
-            children: <Widget>[
-              CardSettingsButton(
-                onPressed: () {
-                  Requests.updateWorkableHours(context, hours).then((value) {
-                    String _result;
-                    Color _color;
-                    if (value) {
-                      _result = 'HORAS ACTUALIZADAS CORREACTAMENTE';
-                      _color = Colors.greenAccent[700];
-                    } else {
-                      _result = 'HUBO UN PROBLEMA, INTENTA OTRA VEZ POR FAVOR';
-                      _color = Colors.deepOrangeAccent[700];
-                    }
-                    _scaffoldKey.currentState
-                      ..removeCurrentSnackBar()
-                      ..showSnackBar(
-                        SnackBar(
-                          backgroundColor: _color,
-                          content: Text(
-                            _result,
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      );
-                  });
-                },
-                label: 'ACTUALIZAR HORAS',
-                bottomSpacing: 4,
-                backgroundColor: Colors.blueAccent[700],
-                textColor: Colors.white,
+            children: [
+              CardSettingsSection(
+                children: <Widget>[
+                  CardSettingsButton(
+                    onPressed: () {
+                      Requests.updateWorkableHours(context, hours)
+                          .then((value) {
+                        String _result;
+                        Color _color;
+                        if (value) {
+                          _result = 'HORAS ACTUALIZADAS CORREACTAMENTE';
+                          _color = Colors.greenAccent[700];
+                        } else {
+                          _result =
+                              'HUBO UN PROBLEMA, INTENTA OTRA VEZ POR FAVOR';
+                          _color = Colors.deepOrangeAccent[700];
+                        }
+                        _scaffoldKey.currentState
+                          ..removeCurrentSnackBar()
+                          ..showSnackBar(
+                            SnackBar(
+                              backgroundColor: _color,
+                              content: Text(
+                                _result,
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          );
+                      });
+                    },
+                    label: 'ACTUALIZAR HORAS',
+                    bottomSpacing: 4,
+                    backgroundColor: Colors.blueAccent[700],
+                    textColor: Colors.white,
+                  )
+                ],
               )
             ],
           )
@@ -136,8 +142,6 @@ class _TutorHoursScreenState extends State<TutorHoursScreen> {
         });
   }
 }
-
-
 
 hoursTable(Map<int, List<int>> initialSchedule) {
   return Container(
