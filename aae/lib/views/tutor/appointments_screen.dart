@@ -28,6 +28,8 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
 
   _appointmentList() {
     final userData = Provider.of<User>(context);
+    Jiffy.locale('es');
+
     return FutureBuilder(
         future: (userData.isTutor())
             ? Requests.getTutorAppointments(context)
@@ -59,7 +61,6 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                   // DateTime.now().subtract(Duration(minutes: 15));
                   // DateTime.parse("2020-05-08 18:00:00");
                   // print(Jiffy("2020-05-07 17:00","yyyy-MM-dd hh:mm").fromNow());
-                  Jiffy.locale('es');
 
                   return Card(
                     child: ListTile(

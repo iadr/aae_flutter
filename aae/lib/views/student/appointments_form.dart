@@ -23,13 +23,13 @@ class _AppointmentFormState extends State<AppointmentForm> {
   bool isFlash = true;
   bool isElementary = true;
   List<String> options = ['Clase Única', 'Clase con Seguimiento (4 clases)'];
-  var _levels;
+  // var _levels;
   List<String> levels = [];
   List<String> subjectNames = [];
   List<String> subjectIds = [];
   Map<String, dynamic> sList = {};
 
-  String _level;
+  // String _level;
   int _appointmentType = 0;
   int _subject;
   DateTime _dateTime = DateTime.now();
@@ -295,7 +295,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
           options: levels,
           initialValue: levels[0],
           onChanged: (value) {
-            _level = value;
+            // _level = value;
             // print(_level);
             value == 'básica' ? isElementary = true : isElementary = false;
             setState(() {
