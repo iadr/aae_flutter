@@ -58,6 +58,48 @@ class Requests {
     }
   }
 
+  static Future<bool> updateWorkableHours(
+      BuildContext context, List hours) async {
+    final session = Provider.of<LoginState>(context, listen: false);
+    // print(jsonEncode(hours));
+    var response = await http.put(ServerInfo.host + '/api/aae/tutors/hours',
+        headers: {
+          HttpHeaders.authorizationHeader: session.token,
+          HttpHeaders.contentTypeHeader: "application/json"
+        },
+        body: jsonEncode({
+          "hours": jsonEncode({"hours": hours})
+        }));
+    if (response.statusCode == 200) {
+      var json = jsonDecode(response.body);
+      // print('statusCode 200: ${response.body}');
+      if (json['error'] == true) return false;
+      return true;
+    } else {
+      print(response.body);
+    }
+    // setState(() {});
+    return false;
+  }
+
+  static Future<Map<String, dynamic>> fetchHours(BuildContext context) async {
+    final session = Provider.of<LoginState>(context, listen: false);
+    var response = await http.get(ServerInfo.host + '/api/aae/tutors/hours',
+        headers: {HttpHeaders.authorizationHeader: session.token});
+    var jsonResponse;
+    if (response.statusCode == 200) {
+      jsonResponse = jsonDecode(response.body);
+      // print('response: ${response.body}');
+      // Map<String, dynamic> aux = jsonResponse["data"];
+      // print((aux.keys.contains("hours")));
+      return jsonResponse["data"];
+    } else {
+      print(response.body);
+    }
+    // setState(() {});
+    return null;
+  }
+
   static Future<AppointmentsList> getTutorAppointments(
       BuildContext context) async {
     final session = Provider.of<LoginState>(context, listen: false);
@@ -170,7 +212,7 @@ class Requests {
     } else {
       print(response.body);
       var json = jsonDecode(response.body);
-      if(json['code']==500){
+      if (json['code'] == 500) {
         return false;
       }
       return true;

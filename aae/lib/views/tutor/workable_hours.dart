@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:aae/providers/login_state.dart';
+import 'package:aae/providers/server_requests.dart';
 import 'package:aae/utils/server_info.dart';
+import 'package:card_settings/card_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:weekly_timetable/weekly_timetable.dart';
@@ -18,116 +20,124 @@ class TutorHoursScreen extends StatefulWidget {
 }
 
 class _TutorHoursScreenState extends State<TutorHoursScreen> {
+  Map<int, List<int>> initialSchedule;
+  GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     super.initState();
-    fetchHours(context);
+    Requests.fetchHours(context);
   }
-
-  Map<int, List<int>> initialSchedule;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
-        title: Text('Mi horario'),
+        title: Text('Mis horas trabajables'),
       ),
-      body: FutureBuilder(
-          future: fetchHours(context),
-          builder: (context, AsyncSnapshot<Map> ss) {
-            if (ss.hasData) {
-              if (ss.data.keys.contains("hours")) {
-                initialSchedule = parseToTimeTable(ss.data["hours"]["hours"]);
-              } else {
-                initialSchedule = {
-                  0: [],
-                  1: [],
-                  2: [],
-                  3: [],
-                  4: [],
-                  5: [],
-                };
-              }
-              return hoursTable(initialSchedule);
-            } else if (ss.hasError) {
-              return Center(
-                child: Text(
-                  'Ocurrió un error, intenta más tarde ...',
-                  style: TextStyle(
-                      color: Colors.red[500],
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18),
-                ),
-              );
-            } else {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          }),
-      floatingActionButton: FlatButton.icon(
-        color: ThemeData().primaryColor,
-        icon: Row(
-          children: <Widget>[
-            Icon(Icons.schedule),
-            Icon(Icons.file_upload),
-            Icon(Icons.cloud_upload),
-          ],
-        ),
-        label: Text(
-          'Actualizar horarios',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-        ),
-        onPressed: () {
-          updateHours(context);
-        },
-        shape: RoundedRectangleBorder(
-            borderRadius: new BorderRadius.circular(18.0),
-            side: BorderSide(color: ThemeData().primaryColorDark)),
+      body: Column(
+        children: <Widget>[
+          displayHours(context),
+          CardSettings(
+            cardElevation: 1,
+            shrinkWrap: true,
+            children: <Widget>[
+              CardSettingsButton(
+                onPressed: () {
+                  Requests.updateWorkableHours(context, hours).then((value) {
+                    String _result;
+                    Color _color;
+                    if (value) {
+                      _result = 'HORAS ACTUALIZADAS CORREACTAMENTE';
+                      _color = Colors.greenAccent[700];
+                    } else {
+                      _result = 'HUBO UN PROBLEMA, INTENTA OTRA VEZ POR FAVOR';
+                      _color = Colors.deepOrangeAccent[700];
+                    }
+                    _scaffoldKey.currentState
+                      ..removeCurrentSnackBar()
+                      ..showSnackBar(
+                        SnackBar(
+                          backgroundColor: _color,
+                          content: Text(
+                            _result,
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      );
+                  });
+                },
+                label: 'ACTUALIZAR HORAS',
+                bottomSpacing: 4,
+                backgroundColor: Colors.blueAccent[700],
+                textColor: Colors.white,
+              )
+            ],
+          )
+        ],
       ),
+      // floatingActionButton: FlatButton.icon(
+      //   color: ThemeData().primaryColor,
+      //   icon: Row(
+      //     children: <Widget>[
+      //       Icon(Icons.schedule),
+      //       Icon(Icons.file_upload),
+      //       Icon(Icons.cloud_upload),
+      //     ],
+      //   ),
+      //   label: Text(
+      //     'Actualizar horarios',
+      //     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+      //   ),
+      //   onPressed: () {
+      //     updateWorkableHours(context);
+      //   },
+      //   shape: RoundedRectangleBorder(
+      //       borderRadius: new BorderRadius.circular(18.0),
+      //       side: BorderSide(color: ThemeData().primaryColorDark)),
+      // ),
     );
   }
+
+  FutureBuilder<Map<String, dynamic>> displayHours(BuildContext context) {
+    return FutureBuilder(
+        future: Requests.fetchHours(context),
+        builder: (context, AsyncSnapshot<Map> ss) {
+          if (ss.hasData) {
+            if (ss.data.keys.contains("hours")) {
+              initialSchedule = parseToTimeTable(ss.data["hours"]["hours"]);
+            } else {
+              initialSchedule = {
+                0: [],
+                1: [],
+                2: [],
+                3: [],
+                4: [],
+                5: [],
+              };
+            }
+            return hoursTable(initialSchedule);
+          } else if (ss.hasError) {
+            return Center(
+              child: Text(
+                'Ocurrió un error, intenta más tarde ...',
+                style: TextStyle(
+                    color: Colors.red[500],
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18),
+              ),
+            );
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        });
+  }
 }
 
-Future<Map<String, dynamic>> fetchHours(BuildContext context) async {
-  final session = Provider.of<LoginState>(context, listen: false);
-  var response = await http.get(ServerInfo.host + '/api/aae/tutors/hours',
-      headers: {HttpHeaders.authorizationHeader: session.token});
-  var jsonResponse;
-  if (response.statusCode == 200) {
-    jsonResponse = jsonDecode(response.body);
-    // print('response: ${response.body}');
-    // Map<String, dynamic> aux = jsonResponse["data"];
-    // print((aux.keys.contains("hours")));
-    return jsonResponse["data"];
-  } else {
-    print(response.body);
-  }
-  // setState(() {});
-  return null;
-}
 
-updateHours(BuildContext context) async {
-  final session = Provider.of<LoginState>(context, listen: false);
-  // print(jsonEncode(hours));
-  var response = await http.put(ServerInfo.host + '/api/aae/tutors/hours',
-      headers: {
-        HttpHeaders.authorizationHeader: session.token,
-        HttpHeaders.contentTypeHeader: "application/json"
-      },
-      body: jsonEncode({
-        "hours": jsonEncode({"hours": hours})
-      }));
-  if (response.statusCode == 200) {
-    // jsonResponse = jsonDecode(response.body);
-    // print('statusCode 200: ${response.body}');
-    return null;
-  } else {
-    print(response.body);
-  }
-  // setState(() {});
-  return null;
-}
 
 hoursTable(Map<int, List<int>> initialSchedule) {
   return Container(

@@ -1,10 +1,12 @@
 import 'package:aae/models/user.dart';
 import 'package:aae/views/dashboard.dart';
+import 'package:aae/views/profile_screen.dart';
 import 'package:aae/views/student/appointments_form.dart';
 import 'package:aae/views/tutor/appointments_screen.dart';
 import 'package:aae/views/tutor/subjects_screen.dart';
 import 'package:aae/views/tutor/workable_hours.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -14,11 +16,15 @@ myDrawer(BuildContext context) {
   List<Widget> drawerTiles() {
     List<Widget> children = [
       DrawerHeader(
-        child: Container(
-          child: CircleAvatar(
-            backgroundColor: Colors.transparent,
-            child: ClipOval(
-              child: Image.network(_photo, fit: BoxFit.cover),
+        child: FractionallySizedBox(
+          heightFactor: 1,
+          widthFactor: 1,
+          child: Container(
+            child: CircleAvatar(
+              backgroundColor: Colors.transparent,
+              child: ClipOval(
+                child: Image.network(_photo, fit: BoxFit.cover),
+              ),
             ),
           ),
         ),
@@ -41,17 +47,15 @@ myDrawer(BuildContext context) {
         ..addAll([
           ListTile(
             leading: Icon(FontAwesomeIcons.calendarPlus),
-            title: Text('Agendar Tutoría'),
+            title: Text('Agendar Clase'),
             onTap: () {
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => AppointmentForm()));
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => AppointmentForm()));
             },
           ),
           ListTile(
             leading: Icon(FontAwesomeIcons.bookReader),
-            title: Text('Mis Tutorías'),
+            title: Text('Mis Próximas clases'),
             onTap: () {
               Navigator.pushReplacement(
                   context,
@@ -73,9 +77,13 @@ myDrawer(BuildContext context) {
                       builder: (context) => AppointmentsScreen()));
             },
           ),
+          Divider(
+          color: Colors.blueAccent[100],
+          thickness: 1.5,
+        ),
           ListTile(
             leading: Icon(FontAwesomeIcons.calendarAlt),
-            title: Text('Mi Horario'),
+            title: Text('Configurar Mi Horario'),
             onTap: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => TutorHoursScreen()));
@@ -83,7 +91,7 @@ myDrawer(BuildContext context) {
           ),
           ListTile(
             leading: Icon(FontAwesomeIcons.book),
-            title: Text('Mis Asignaturas'),
+            title: Text('Configurar Mis Asignaturas'),
             onTap: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => SubjectsScreen()));
@@ -91,13 +99,29 @@ myDrawer(BuildContext context) {
           )
         ]);
     }
+    children
+      ..addAll([
+        Divider(
+          color: Colors.blueAccent[100],
+          thickness: 1.5,
+        ),
+        ListTile(
+          leading: Icon(FontAwesomeIcons.cog),
+          title: Text('Configurar Perfil'),
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => ProfileScreen()));
+          },
+        ),
+      ]);
     return children;
   }
 
   return Drawer(
-    child: ListView(
+    child: Column(
       // Important: Remove any padding from the ListView.
-      padding: EdgeInsets.zero,
+      // padding: EdgeInsets.zero,
+      mainAxisSize: MainAxisSize.max,
       children: drawerTiles(),
     ),
   );
