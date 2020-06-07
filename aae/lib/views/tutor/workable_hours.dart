@@ -1,14 +1,7 @@
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:aae/providers/login_state.dart';
 import 'package:aae/providers/server_requests.dart';
-import 'package:aae/utils/server_info.dart';
 import 'package:card_settings/card_settings.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:weekly_timetable/weekly_timetable.dart';
-import 'package:http/http.dart' as http;
 
 List hours = [];
 

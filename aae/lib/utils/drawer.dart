@@ -2,7 +2,7 @@ import 'package:aae/models/user.dart';
 import 'package:aae/views/dashboard.dart';
 import 'package:aae/views/profile_screen.dart';
 import 'package:aae/views/student/appointments_form.dart';
-import 'package:aae/views/tutor/appointments_screen.dart';
+import 'package:aae/views/appointments_screen.dart';
 import 'package:aae/views/tutor/subjects_screen.dart';
 import 'package:aae/views/tutor/workable_hours.dart';
 import 'package:flutter/material.dart';

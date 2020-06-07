@@ -9,12 +9,12 @@ import "package:collection/collection.dart";
 import 'package:intl/intl.dart';
 
 final Map<DateTime, List> _holidays = {
-  DateTime(2020, 1, 1): ['Año Nuevo'],
-  DateTime(2020, 5, 1): ['Día del trabajador'],
-  DateTime(2020, 5, 21): ['Combate Naval de Iquique'],
-  DateTime(2020, 9, 18): ['Primera Junta de Gobierno'],
-  DateTime(2020, 9, 19): ['Glorias Militares'],
-  DateTime(2020, 12, 25): ['Navidad'],
+  // DateTime(2020, 1, 1): ['Año Nuevo'],
+  // DateTime(2020, 5, 1): ['Día del trabajador'],
+  // DateTime(2020, 5, 21): ['Combate Naval de Iquique'],
+  // DateTime(2020, 9, 18): ['Primera Junta de Gobierno'],
+  // DateTime(2020, 9, 19): ['Glorias Militares'],
+  // DateTime(2020, 12, 25): ['Navidad'],
 };
 
 class AppointmentTutorHoursScreen extends StatefulWidget {
@@ -113,9 +113,6 @@ class _AppointmentTutorHoursScreenState
       return Column(
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
-          // Switch out 2 lines below to play with TableCalendar's settings
-          //-----------------------
-          // _buildTableCalendar(),
           StreamBuilder<Object>(
               stream: null,
               builder: (context, snapshot) {
@@ -178,29 +175,6 @@ class _AppointmentTutorHoursScreenState
                       }
                       Navigator.pop(context);
                     });
-
-                    // return FutureBuilder(
-                    //     future: Requests.newAppointment(
-                    //         context,
-                    //         _appointmentDates,
-                    //         widget.tutorId,
-                    //         widget.subjectId),
-                    //     builder: (context, ss) {
-                    //       switch (ss.connectionState) {
-                    //         case ConnectionState.waiting:
-                    //           return loadingView();
-                    //           break;
-                    //         case ConnectionState.active:
-                    //           break;
-                    //         case ConnectionState.none:
-                    //           break;
-                    //         case ConnectionState.done:
-                    //           if (ss.hasData) {
-                    //           } else if (ss.hasError) {}
-                    //           break;
-                    //         default:
-                    //       }
-                    //     });
                   })
               : IconButton(
                   icon: Icon(
@@ -344,56 +318,6 @@ class _AppointmentTutorHoursScreenState
     );
   }
 
-/*
-  Widget _buildButtons() {
-    return Column(
-      children: <Widget>[
-        Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            RaisedButton(
-              child: Text('Month'),
-              onPressed: () {
-                setState(() {
-                  _calendarController.setCalendarFormat(CalendarFormat.month);
-                });
-              },
-            ),
-            RaisedButton(
-              child: Text('2 weeks'),
-              onPressed: () {
-                setState(() {
-                  _calendarController
-                      .setCalendarFormat(CalendarFormat.twoWeeks);
-                });
-              },
-            ),
-            RaisedButton(
-              child: Text('Week'),
-              onPressed: () {
-                setState(() {
-                  _calendarController.setCalendarFormat(CalendarFormat.week);
-                });
-              },
-            ),
-          ],
-        ),
-        const SizedBox(height: 8.0),
-        // RaisedButton(
-        //   child: Text(
-        //       'Set day ${dateTime.day}-${dateTime.month}-${dateTime.year}'),
-        //   onPressed: () {
-        //     _calendarController.setSelectedDay(
-        //       DateTime(dateTime.year, dateTime.month, dateTime.day),
-        //       runCallback: true,
-        //     );
-        //   },
-        // ),
-      ],
-    );
-  }
-*/
   Widget _buildEventList() {
     return ListView(
       children: _selectedEvents.map((event) {
@@ -488,8 +412,34 @@ class _AppointmentTutorHoursScreenState
                     _appointmentDates.add({"date": e.dbDate, "hour": e.hour});
                   });
                   print(_appointmentDates);
-                  //TODO: SEND REQUEST!!!!
-                  Navigator.of(context).pop();
+                  Requests.newAppointment(context, _appointmentDates,
+                            widget.tutorId, widget.subjectId)
+                        .then((value) {
+                      if (value) {
+                        //true
+                        _scaffoldKey.currentState.removeCurrentSnackBar();
+                        _scaffoldKey.currentState.showSnackBar(SnackBar(
+                          content: Text(
+                            'ClASES REGISTRADAS CORRECTAMENTE',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          duration: Duration(seconds: 2),
+                          backgroundColor: Colors.greenAccent[700],
+                        ));
+                      } else {
+                        //false
+                        _scaffoldKey.currentState.removeCurrentSnackBar();
+                        _scaffoldKey.currentState.showSnackBar(SnackBar(
+                          content: Text(
+                            'OCURRIÓ UN PROBLEMA ...',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          duration: Duration(seconds: 2),
+                          backgroundColor: Colors.deepOrangeAccent[700],
+                        ));
+                      }
+                      Navigator.pop(context); // TODO: revisar y hacer el pop hacia la screen anterior
+                    });
                 },
                 child: Text(
                   'CONFIRMAR',

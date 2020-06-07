@@ -61,7 +61,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                   // DateTime.now().subtract(Duration(minutes: 15));
                   // DateTime.parse("2020-05-08 18:00:00");
                   // print(Jiffy("2020-05-07 17:00","yyyy-MM-dd hh:mm").fromNow());
-
+              
                   return Card(
                     child: ListTile(
                       leading: CircleAvatar(
@@ -69,14 +69,11 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                         foregroundColor: Colors.grey,
                         child: Icon(FontAwesomeIcons.book),
                       ),
-                      trailing: IconButton(
-                          icon: Icon(
-                            FontAwesomeIcons.times,
-                            color: Colors.red,
-                          ),
-                          onPressed: () {}),
-                      // title: Text(appointment.date +" "+appointment.hour.substring(0,5)),
-                      subtitle: Text(date.toString()),
+
+                      trailing: IconButton(icon: Icon(FontAwesomeIcons.comments), onPressed: (){
+                        print('lanzar chat entre: ${appointment.tutorId} y ${appointment.studentId}');
+                      }),
+                      subtitle: Text('${appointment.subjectName} - ${appointment.name}'),
                       title: Text(
                           Jiffy(date.toString(), "yyyy-MM-dd hh:mm").fromNow()),
                       // subtitle: Text(appointment.name),

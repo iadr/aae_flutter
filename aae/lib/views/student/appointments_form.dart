@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import "package:collection/collection.dart";
+import 'package:aae/style/theme.dart' as aaeColors;
 
 class AppointmentForm extends StatefulWidget {
   AppointmentForm({Key key}) : super(key: key);
@@ -66,7 +67,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                           duration: Duration(seconds: 2),
-                          backgroundColor: Colors.greenAccent[700],
+                          backgroundColor: aaeColors.Colors.success,
                         ));
                       } else {
                         _scaffoldKey.currentState.removeCurrentSnackBar();
@@ -76,7 +77,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                           duration: Duration(seconds: 2),
-                          backgroundColor: Colors.deepOrangeAccent[700],
+                          backgroundColor: aaeColors.Colors.failure,
                         ));
                       }
                     });
@@ -264,7 +265,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
               }
             } else if (snapshot.hasError) {
               return Center(
-                child: Icon(Icons.error_outline),
+                child: Icon(Icons.error_outline,color: aaeColors.Colors.failure),
               );
             } else {
               return Column(
@@ -394,7 +395,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
               bottomSpacing: 4,
               label: 'BUSCAR',
               textColor: Colors.white,
-              backgroundColor: Colors.lightBlue[700],
+              backgroundColor: aaeColors.Colors.confirm,
               onPressed: () {
                 // print('app:$_appointmentType\nsubject: $_subject \n');
                 // print(DateFormat('yyyy-MM-dd').format(_dateTime));
@@ -428,7 +429,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
                 child: Text(
                   'CERRAR',
                   style: TextStyle(
-                    color: Colors.deepOrange[700],
+                    color: aaeColors.Colors.cancel,
                   ),
                 ),
               ),
@@ -447,7 +448,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         duration: Duration(seconds: 2),
-                        backgroundColor: Colors.greenAccent[700],
+                        backgroundColor: aaeColors.Colors.success,
                       ));
                     } else {
                       //false
@@ -458,7 +459,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         duration: Duration(seconds: 2),
-                        backgroundColor: Colors.deepOrangeAccent[700],
+                        backgroundColor: aaeColors.Colors.failure,
                       ));
                     }
                     Navigator.pop(context);
@@ -466,7 +467,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
                 },
                 child: Text(
                   'CONFIRMAR',
-                  style: TextStyle(color: Colors.blue[700]),
+                  style: TextStyle(color: aaeColors.Colors.confirm),
                 ),
               ),
             ],
